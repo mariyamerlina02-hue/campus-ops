@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CampusOps 2.0 • University Governance & Operations Hub</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans antialiased min-h-screen">
+  <!-- Top Navigation Bar -->
+  <header class="sticky top-0 z-50 flex h-16 items-center justify-between border-b border-slate-800 bg-slate-900/90 px-6 backdrop-blur">
+    <div class="flex items-center gap-3">
+      <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-tr from-indigo-500 to-purple-600 text-white shadow-lg shadow-indigo-500/30">
+        <i class="fa-solid fa-graduation-cap text-lg"></i>
+      </div>
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="font-black tracking-tight text-white text-base">CampusOps</span>
+          <span class="rounded bg-indigo-500/20 px-1.5 py-0.5 text-[10px] font-bold text-indigo-400 border border-indigo-500/30">3 Pillars • Governance v2.0</span>
+        </div>
+        <p class="text-[10px] text-slate-400">Firebase Cloud: <code class="text-indigo-400 font-mono">orvian-89563</code></p>
+      </div>
+    </div>
+
+    <!-- Active Persona Switcher & SOS Quick Button -->
+    <div class="flex items-center gap-3">
+      <!-- SOS Panic Button -->
+      <button onclick="triggerEmergencySos()" class="relative flex items-center gap-2 rounded-full bg-rose-600 px-4 py-2 text-xs font-black uppercase tracking-wider text-white shadow-lg shadow-rose-900/50 hover:bg-rose-500 active:scale-95 transition">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+        <span>SOS Panic Beacon</span>
+      </button>
+
+      <!-- Role Selector with all 7 Governance Levels -->
+      <div class="relative">
+        <select id="roleSelector" onchange="switchPersona(this.value)" class="rounded-xl border border-slate-700 bg-slate-800 px-3 py-2 text-xs font-semibold text-slate-200 outline-none focus:border-indigo-500">
+          <option value="student">🎓 Level 1: Alex Rivers (Student)</option>
+          <option value="faculty">👨‍🏫 Level 2: Dr. Marcus Chen (Faculty)</option>
+          <option value="add_hod">📋 Level 3: Dr. R. Vasanth (Add. HOD)</option>
+          <option value="hod">👔 Level 4: Prof. Arvind Sharma (HOD)</option>
+          <option value="dean">📜 Level 5: Dr. Eleanor Harrison (Dean)</option>
+          <option value="joint_registrar">⚖️ Level 6: Suresh Nair (Joint Registrar)</option>
+          <option value="registrar">🏛️ Level 7: Dr. K. S. Ramanathan (Registrar)</option>
+        </select>
+      </div>
+
+      <a href="http://localhost:3000" target="_blank" class="hidden sm:flex items-center gap-1.5 rounded-xl bg-indigo-600/30 border border-indigo-500/40 px-3 py-2 text-xs font-bold text-indigo-300 hover:bg-indigo-600/50 transition">
+        <i class="fa-solid fa-bolt"></i>
+        <span>Next.js Live Server</span>
+      </a>
+    </div>
+  </header>
+
+  <div class="flex">
+    <!-- Sidebar Navigation -->
+    <aside class="sticky top-16 h-[calc(100vh-4rem)] w-64 border-r border-slate-800 bg-slate-900/50 p-4 hidden md:flex flex-col justify-between">
+      <nav class="space-y-1">
+        <button onclick="navigateTab('dashboard')" class="nav-btn w-full flex items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-bold transition text-left text-white bg-indigo-600" data-tab="dashboard">
+          <i class="fa-solid fa-gauge w-4"></i>
+          <span>Governance Dashboard</span>
+        </button>
+        <button onclick="navigateTab('grievances')" class="nav-btn w-full flex items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-bold transition text-left text-slate-400 hover:text-white hover:bg-slate-800" data-tab="grievances">
+          <i class="fa-solid fa-bullhorn w-4"></i>
+          <span>Campus Pulse (Grievance)</span>
+        </button>
+        <button onclick="navigateTab('resources')" class="nav-btn w-full flex items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-bold transition text-left text-slate-400 hover:text-white hover:bg-slate-800" data-tab="resources">
+          <i class="fa-solid fa-calendar-check w-4"></i>
+          <span>Campus Nexus (Spaces)</span>
+        </button>
+        <button onclick="navigateTab('incidents')" class="nav-btn w-full flex items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-bold transition text-left text-slate-400 hover:text-white hover:bg-slate-800" data-tab="incidents">
+          <i class="fa-solid fa-shield-halved w-4"></i>
+          <span>Campus Sentinel (Safety)</span>
+        </button>
+        <button onclick="navigateTab('analytics')" class="nav-btn w-full flex items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-bold transition text-left text-slate-400 hover:text-white hover:bg-slate-800" data-tab="analytics">
+          <i class="fa-solid fa-chart-pie w-4"></i>
+          <span>Institutional Analytics</span>
+        </button>
+      </nav>
+
+      <!-- Active User Card -->
+      <div class="rounded-2xl border border-slate-800 bg-slate-800/40 p-3">
+        <div class="flex items-center gap-2.5">
+          <div id="userAvatar" class="flex h-9 w-9 items-center justify-center rounded-full bg-indigo-600 text-xs font-bold text-white">
+            AR
+          </div>
+          <div class="overflow-hidden">
+            <div id="userName" class="truncate text-xs font-bold text-white">Alex Rivers</div>
+            <div id="userRoleBadge" class="text-[10px] text-emerald-400 font-semibold uppercase">Student • Level 1</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 p-6 md:p-8 max-w-6xl mx-auto space-y-6">
+      <div id="toastNotification" class="fixed bottom-6 right-6 z-50 hidden rounded-2xl bg-indigo-600 px-5 py-3 text-sm font-bold text-white shadow-2xl transition"></div>
+
+      <!-- TAB 1: DASHBOARD (Spotlighting 3 Pillars) -->
+      <section id="tab-dashboard" class="space-y-6 tab-content">
+        <!-- Banner -->
+        <div class="rounded-3xl bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 border border-slate-800 p-8 shadow-xl text-white relative overflow-hidden">
+          <div class="relative z-10">
+            <span class="rounded-full bg-indigo-500/20 px-3 py-1 text-xs font-bold text-indigo-300">Firebase orvian-89563 Connected</span>
+            <h1 class="text-3xl font-black mt-2" id="bannerGreeting">University Governance Command Plane</h1>
+            <p class="text-xs text-indigo-200 mt-1">Dedicated access for Student, Faculty, Add. HOD, HOD, Dean, Joint Registrar, and Registrar.</p>
+          </div>
+        </div>
+
+        <!-- 3 CORE PILLARS -->
+        <div>
+          <h2 class="text-lg font-black text-white mb-3">Core Operational Pillars</h2>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Pillar 1: Campus Pulse -->
+            <div class="rounded-3xl border border-indigo-500/30 bg-indigo-950/20 p-6 flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between mb-3">
+                  <div class="h-10 w-10 flex items-center justify-center rounded-xl bg-indigo-600 text-white font-bold">
+                    <i class="fa-solid fa-bullhorn"></i>
+                  </div>
+                  <span class="text-[10px] font-bold text-indigo-400 uppercase">Pillar 1</span>
+                </div>
+                <h3 class="text-lg font-black text-white">Campus Pulse</h3>
+                <p class="text-xs text-slate-400 mt-1">Student complaints, peer upvoting, and hierarchical escalation to HOD, Dean, and Registrar.</p>
+                <div class="mt-4 rounded-xl bg-slate-900/80 p-3 text-xs space-y-1">
+                  <div class="flex justify-between text-slate-400"><span>Open Grievances:</span> <strong class="text-white" id="pulseCount">3 tickets</strong></div>
+                  <div class="flex justify-between text-slate-400"><span>Target SLA:</span> <strong class="text-emerald-400">24.0 Hours</strong></div>
+                </div>
+              </div>
+              <button onclick="navigateTab('grievances')" class="mt-5 w-full rounded-xl bg-indigo-600 py-2.5 text-xs font-bold text-white hover:bg-indigo-500">
+                Open Campus Pulse →
+              </button>
+            </div>
+
+            <!-- Pillar 2: Campus Nexus -->
+            <div class="rounded-3xl border border-purple-500/30 bg-purple-950/20 p-6 flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between mb-3">
+                  <div class="h-10 w-10 flex items-center justify-center rounded-xl bg-purple-600 text-white font-bold">
+                    <i class="fa-solid fa-calendar-check"></i>
+                  </div>
+                  <span class="text-[10px] font-bold text-purple-400 uppercase">Pillar 2</span>
+                </div>
+                <h3 class="text-lg font-black text-white">Campus Nexus</h3>
+                <p class="text-xs text-slate-400 mt-1">Automated space reservation for Turing Auditorium, AI Vision Labs, and multi-tier approval signoff.</p>
+                <div class="mt-4 rounded-xl bg-slate-900/80 p-3 text-xs space-y-1">
+                  <div class="flex justify-between text-slate-400"><span>Spaces Active:</span> <strong class="text-white">5 Facilities</strong></div>
+                  <div class="flex justify-between text-slate-400"><span>Pending Review:</span> <strong class="text-amber-400">1 Booking</strong></div>
+                </div>
+              </div>
+              <button onclick="navigateTab('resources')" class="mt-5 w-full rounded-xl bg-purple-600 py-2.5 text-xs font-bold text-white hover:bg-purple-500">
+                Open Campus Nexus →
+              </button>
+            </div>
+
+            <!-- Pillar 3: Campus Sentinel -->
+            <div class="rounded-3xl border border-rose-500/30 bg-rose-950/20 p-6 flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between mb-3">
+                  <div class="h-10 w-10 flex items-center justify-center rounded-xl bg-rose-600 text-white font-bold">
+                    <i class="fa-solid fa-shield-halved"></i>
+                  </div>
+                  <span class="text-[10px] font-bold text-rose-400 uppercase">Pillar 3</span>
+                </div>
+                <h3 class="text-lg font-black text-white">Campus Sentinel</h3>
+                <p class="text-xs text-slate-400 mt-1">One-click SOS panic beacons, GPS dispatch coordinates, and security patrol car management.</p>
+                <div class="mt-4 rounded-xl bg-slate-900/80 p-3 text-xs space-y-1">
+                  <div class="flex justify-between text-slate-400"><span>Alert Status:</span> <strong class="text-rose-400">1 Dispatched</strong></div>
+                  <div class="flex justify-between text-slate-400"><span>Patrol Unit:</span> <strong class="text-white">Unit 4 Active</strong></div>
+                </div>
+              </div>
+              <button onclick="navigateTab('incidents')" class="mt-5 w-full rounded-xl bg-rose-600 py-2.5 text-xs font-bold text-white hover:bg-rose-500">
+                Open Campus Sentinel →
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Activity Feed -->
+        <div class="rounded-3xl border border-slate-800 bg-slate-900/80 p-6">
+          <h2 class="text-sm font-bold text-white mb-3">Active Operational Feed</h2>
+          <div class="space-y-2.5" id="dashboardRecentList"></div>
+        </div>
+      </section>
+
+      <!-- TAB 2: CAMPUS PULSE -->
+      <section id="tab-grievances" class="space-y-6 tab-content hidden">
+        <div class="flex items-center justify-between">
+          <div>
+            <h1 class="text-2xl font-black text-white">Campus Pulse</h1>
+            <p class="text-xs text-slate-400">Student & Faculty Grievance Redressal Pipeline</p>
+          </div>
+          <button onclick="filePromptGrievance()" class="rounded-xl bg-indigo-600 px-4 py-2 text-xs font-bold text-white hover:bg-indigo-500">
+            + File New Grievance
+          </button>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="grievancesList"></div>
+      </section>
+
+      <!-- TAB 3: CAMPUS NEXUS -->
+      <section id="tab-resources" class="space-y-6 tab-content hidden">
+        <div>
+          <h1 class="text-2xl font-black text-white">Campus Nexus</h1>
+          <p class="text-xs text-slate-400">Facility & Lab Scheduling with Hierarchical Signoffs</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="resourcesList"></div>
+      </section>
+
+      <!-- TAB 4: CAMPUS SENTINEL -->
+      <section id="tab-incidents" class="space-y-6 tab-content hidden">
+        <div>
+          <h1 class="text-2xl font-black text-white">Campus Sentinel</h1>
+          <p class="text-xs text-slate-400">Emergency Distress Grid & Incident Investigation</p>
+        </div>
+        <div class="space-y-3" id="incidentsList"></div>
+      </section>
+
+      <!-- TAB 5: ANALYTICS -->
+      <section id="tab-analytics" class="space-y-6 tab-content hidden">
+        <div>
+          <h1 class="text-2xl font-black text-white">Institutional Analytics</h1>
+          <p class="text-xs text-slate-400">Resolution turnaround and department performance telemetry</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="rounded-3xl border border-slate-800 bg-slate-900/80 p-6">
+            <h3 class="text-sm font-bold text-white mb-4">Grievance Distribution</h3>
+            <canvas id="categoryChart" height="200"></canvas>
+          </div>
+          <div class="rounded-3xl border border-slate-800 bg-slate-900/80 p-6">
+            <h3 class="text-sm font-bold text-white mb-4">Resolution SLA (Hours)</h3>
+            <canvas id="slaChart" height="200"></canvas>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const state = {
+      activeRole: 'student',
+      grievances: [
+        { id: 'GRV-101', title: 'AC Failure in Turing Auditorium', category: 'Infrastructure', status: 'In Progress', upvotes: 14, desc: 'Central cooling unit tripped breaker during CS lecture.' },
+        { id: 'GRV-102', title: 'Grade Discrepancy CS-402', category: 'Academic', status: 'Escalated to HOD', upvotes: 5, desc: 'Final lab assessment marks mismatch with paper grade.' },
+        { id: 'GRV-103', title: 'Hot Water Supply Failure Hostel D', category: 'Hostel', status: 'Submitted', upvotes: 21, desc: 'Solar heating valve malfunctioning for 4 mornings.' }
+      ],
+      resources: [
+        { id: 'res-1', name: 'Alan Turing Grand Auditorium', capacity: 350, type: 'Auditorium', approval: 'Dean / Registrar Approval', img: 'https://images.unsplash.com/photo-1517457373958-b7bdd4587205?w=500' },
+        { id: 'res-2', name: 'Advanced AI & Vision Lab (302)', capacity: 45, type: 'Lab', approval: 'HOD Approval', img: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=500' },
+        { id: 'res-3', name: 'Executive Boardroom Alpha', capacity: 28, type: 'Boardroom', approval: 'Joint Registrar Approval', img: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=500' }
+      ],
+      incidents: [
+        { id: 'INC-081', title: '🚨 SOS PANIC BEACON: South Courtyard', type: 'Medical Distress', status: 'Dispatched', unit: 'Patrol Car 4 & Medic 2' },
+        { id: 'INC-080', title: 'Unattended Tactical Bag at East Gate', type: 'Security Hazard', status: 'Investigating', unit: 'Officer Jackson' }
+      ]
+    };
+
+    function showToast(msg) {
+      const t = document.getElementById('toastNotification');
+      t.innerText = msg;
+      t.classList.remove('hidden');
+      setTimeout(() => t.classList.add('hidden'), 3500);
+    }
+
+    function switchPersona(role) {
+      state.activeRole = role;
+      const personas = {
+        student: { name: 'Alex Rivers', badge: 'Student • Level 1', av: 'AR' },
+        faculty: { name: 'Dr. Marcus Chen', badge: 'Faculty • Level 2', av: 'MC' },
+        add_hod: { name: 'Dr. R. Vasanth', badge: 'Add. HOD • Level 3', av: 'RV' },
+        hod: { name: 'Prof. Arvind Sharma', badge: 'HOD • Level 4', av: 'AS' },
+        dean: { name: 'Dr. Eleanor Harrison', badge: 'Dean • Level 5', av: 'EH' },
+        joint_registrar: { name: 'Suresh Nair', badge: 'Joint Registrar • Level 6', av: 'SN' },
+        registrar: { name: 'Dr. K. S. Ramanathan', badge: 'University Registrar • Level 7', av: 'KR' }
+      };
+      const p = personas[role];
+      document.getElementById('userName').innerText = p.name;
+      document.getElementById('userRoleBadge').innerText = p.badge;
+      document.getElementById('userAvatar').innerText = p.av;
+      document.getElementById('bannerGreeting').innerText = `Governance Command: ${p.name}`;
+      showToast(`Switched active view to ${p.name} (${p.badge})`);
+    }
+
+    function navigateTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      document.querySelectorAll('.nav-btn').forEach(btn => {
+        btn.classList.remove('bg-indigo-600', 'text-white');
+        btn.classList.add('text-slate-400');
+      });
+      document.getElementById('tab-' + tabId).classList.remove('hidden');
+      const activeBtn = document.querySelector(`.nav-btn[data-tab="${tabId}"]`);
+      if (activeBtn) {
+        activeBtn.classList.add('bg-indigo-600', 'text-white');
+        activeBtn.classList.remove('text-slate-400');
+      }
+      if (tabId === 'analytics') initCharts();
+    }
+
+    function triggerEmergencySos() {
+      showToast('🚨 SOS BEACON TRANSMITTED: Security & Registrar Dispatched!');
+      state.incidents.unshift({
+        id: 'INC-' + Math.floor(100 + Math.random() * 900),
+        title: '🚨 LIVE EMERGENCY SOS PANIC BEACON',
+        type: 'Medical / Security Emergency',
+        status: 'Dispatched',
+        unit: 'Rapid Unit Alpha'
+      });
+      renderIncidents();
+    }
+
+    function filePromptGrievance() {
+      const title = prompt('Enter Grievance Title:');
+      if (title) {
+        state.grievances.unshift({
+          id: 'GRV-' + Math.floor(200 + Math.random() * 800),
+          title,
+          category: 'Infrastructure',
+          status: 'Submitted',
+          upvotes: 1,
+          desc: 'Recently filed grievance awaiting departmental review.'
+        });
+        renderGrievances();
+        showToast('Grievance filed into Campus Pulse SLA queue');
+      }
+    }
+
+    function renderGrievances() {
+      const container = document.getElementById('grievancesList');
+      container.innerHTML = state.grievances.map(g => `
+        <div class="rounded-2xl border border-slate-800 bg-slate-900/60 p-5 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between text-xs mb-2">
+              <span class="rounded bg-indigo-500/20 px-2 py-0.5 text-indigo-400 font-bold uppercase">${g.category}</span>
+              <span class="rounded bg-amber-500/20 px-2 py-0.5 text-amber-300 font-bold uppercase">${g.status}</span>
+            </div>
+            <h3 class="font-bold text-white text-sm">${g.title}</h3>
+            <p class="text-xs text-slate-400 mt-1">${g.desc}</p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-slate-800 flex items-center justify-between">
+            <button onclick="upvoteGrievance('${g.id}')" class="flex items-center gap-1.5 rounded-lg bg-slate-800 px-3 py-1 text-xs font-bold text-indigo-300 hover:bg-slate-700">
+              <i class="fa-solid fa-thumbs-up"></i> <span>${g.upvotes}</span>
+            </button>
+            <span class="text-[10px] text-slate-500">ID: ${g.id}</span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function upvoteGrievance(id) {
+      const g = state.grievances.find(item => item.id === id);
+      if (g) {
+        g.upvotes++;
+        renderGrievances();
+        showToast('Upvoted grievance ' + id);
+      }
+    }
+
+    function renderResources() {
+      const container = document.getElementById('resourcesList');
+      container.innerHTML = state.resources.map(r => `
+        <div class="rounded-3xl border border-slate-800 bg-slate-900/60 overflow-hidden flex flex-col justify-between">
+          <img src="${r.img}" class="h-40 w-full object-cover">
+          <div class="p-5">
+            <span class="text-[10px] font-bold text-purple-400 uppercase">${r.type} • ${r.capacity} Seats</span>
+            <h3 class="font-black text-white text-base mt-1">${r.name}</h3>
+            <p class="text-xs text-amber-400 mt-1">${r.approval}</p>
+          </div>
+          <div class="p-5 pt-0">
+            <button onclick="showToast('Booking request routed to ${r.approval}!')" class="w-full rounded-xl bg-purple-600 py-2.5 text-xs font-bold text-white hover:bg-purple-500">
+              Request Booking
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderIncidents() {
+      const container = document.getElementById('incidentsList');
+      container.innerHTML = state.incidents.map(i => `
+        <div class="rounded-2xl border border-rose-900/50 bg-rose-950/20 p-5 flex items-center justify-between">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="font-bold text-white text-sm">${i.title}</span>
+              <span class="rounded bg-rose-500/20 px-2 py-0.5 text-rose-300 text-[10px] font-black uppercase">${i.status}</span>
+            </div>
+            <p class="text-xs text-slate-400 mt-1">Responding Unit: <strong class="text-rose-400">${i.unit}</strong></p>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    let chartsInitialized = false;
+    function initCharts() {
+      if (chartsInitialized) return;
+      chartsInitialized = true;
+      new Chart(document.getElementById('categoryChart'), {
+        type: 'bar',
+        data: {
+          labels: ['Infrastructure', 'Academic', 'Hostel', 'Dining', 'Security'],
+          datasets: [{ label: 'Complaints', data: [18, 12, 15, 8, 6], backgroundColor: '#6366f1' }]
+        },
+        options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+      });
+
+      new Chart(document.getElementById('slaChart'), {
+        type: 'line',
+        data: {
+          labels: ['Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
+          datasets: [{ label: 'Mean Hours', data: [36, 31, 27, 23, 19], borderColor: '#10b981', tension: 0.3 }]
+        },
+        options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+      });
+    }
+
+    // Init
+    renderGrievances();
+    renderResources();
+    renderIncidents();
+    document.getElementById('dashboardRecentList').innerHTML = `
+      <div class="p-3 rounded-xl bg-slate-800/40 text-xs flex justify-between items-center">
+        <span>📢 Mid-Term Examination Schedule & Hall Numbers Approved</span>
+        <span class="text-indigo-400 font-bold">Registrar Signoff</span>
+      </div>
+      <div class="p-3 rounded-xl bg-slate-800/40 text-xs flex justify-between items-center">
+        <span>🏛️ Turing Auditorium Booked for International Robotics Keynote</span>
+        <span class="text-purple-400 font-bold">Dean Approved</span>
+      </div>
+      <div class="p-3 rounded-xl bg-slate-800/40 text-xs flex justify-between items-center">
+        <span>🚨 Sentinel Patrol Shift Handover & SOS Beacons Tested</span>
+        <span class="text-rose-400 font-bold">Security / Joint Registrar</span>
+      </div>
+    `;
+  </script>
+</body>
+</html>

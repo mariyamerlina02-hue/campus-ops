@@ -1,0 +1,148 @@
+{
+  "campus": {
+    "name": "Dr. M.G.R. Educational and Research Institute",
+    "campusName": "Maduravoyal Main Campus",
+    "location": "EVR Periyar Salai, Maduravoyal, Chennai, Tamil Nadu 600095",
+    "coordinates": {
+      "latitude": 13.0569,
+      "longitude": 80.1636
+    },
+    "verificationSource": "Drone Photogrammetry Reference Frames 00s-28s & Institutional Master Plan"
+  },
+  "buildings": [
+    {
+      "id": "MGR-ADMIN-01",
+      "name": "Main Administrative & Engineering Block (Anna Block)",
+      "category": "administrative",
+      "department": "Office of the Chancellor, Vice Chancellor & Central Administration",
+      "floorCount": 5,
+      "coordinates3D": { "x": 0, "y": 8, "z": -25 },
+      "dimensions": { "width": 46, "height": 16, "depth": 14 },
+      "architecturalStyle": "Modern curtain wall with teal reflective glazing, 5 orange cubic rooftop canopies, and double-height yellow portal arches",
+      "droneRefFrames": [0, 1, 2, 3, 4, 5, 6, 7, 8],
+      "facilities": [
+        "Vice Chancellor Directorate",
+        "Registrar & Controller of Examinations",
+        "Central Boardroom & Executive Council",
+        "High-Performance Computing Cluster",
+        "Main Reception & Digital Kiosk"
+      ],
+      "defaultStatus": "normal",
+      "approximate": false
+    },
+    {
+      "id": "MGR-ROCKET-02",
+      "name": "ISRO PSLV Space Launch Monument",
+      "category": "monument",
+      "department": "Department of Aerospace & Space Technology",
+      "floorCount": 1,
+      "coordinates3D": { "x": -18, "y": 4, "z": -12 },
+      "dimensions": { "width": 3, "height": 15, "depth": 3 },
+      "architecturalStyle": "Full-scale multi-stage rocket monument on hexagonal pedestal commemorating Indian space missions",
+      "droneRefFrames": [0, 1, 3, 7],
+      "facilities": [
+        "Aerospace Engineering Exhibition Point",
+        "Visitor & Convocation Photography Landmark",
+        "Ceremonial Guard Plaza"
+      ],
+      "defaultStatus": "normal",
+      "approximate": false
+    },
+    {
+      "id": "MGR-VOC-03",
+      "name": "V.O.C. Academic Complex & Central Library",
+      "category": "academic",
+      "department": "Central Library, Humanities, Science & Foundational Engineering",
+      "floorCount": 6,
+      "coordinates3D": { "x": -28, "y": 10, "z": 18 },
+      "dimensions": { "width": 32, "height": 20, "depth": 22 },
+      "architecturalStyle": "6-story yellow facade with white balustrades, prominent yellow signage, and central light well",
+      "droneRefFrames": [9, 10, 11, 12, 13, 20, 21, 22],
+      "facilities": [
+        "Central University Library (3 Floors)",
+        "Digital Reading Room & IEEE e-Library",
+        "Faculty of Humanities & Sciences",
+        "Multimedia Seminar Halls",
+        "Autonomous Study Pods"
+      ],
+      "defaultStatus": "normal",
+      "approximate": false
+    },
+    {
+      "id": "MGR-SPORTS-04",
+      "name": "Outdoor Athletic Arena & Synthetic Courts",
+      "category": "sports",
+      "department": "Department of Physical Education & Sports",
+      "floorCount": 1,
+      "coordinates3D": { "x": 20, "y": 0.5, "z": 24 },
+      "dimensions": { "width": 26, "height": 1, "depth": 18 },
+      "architecturalStyle": "Dual-tone red and cyan synthetic court with high-tension perimeter chain-link safety fencing",
+      "droneRefFrames": [20, 21, 22, 23, 24, 25, 26, 27],
+      "facilities": [
+        "Inter-University Volleyball Arena",
+        "All-Weather Badminton Court",
+        "Spectator Tier Seating",
+        "Athletics Equipment Store"
+      ],
+      "defaultStatus": "normal",
+      "approximate": false
+    },
+    {
+      "id": "MGR-PROMENADE-05",
+      "name": "Royal Palm Avenue & Ceremonial Paver Plaza",
+      "category": "walkway",
+      "department": "Campus Operations & Estate Maintenance",
+      "floorCount": 1,
+      "coordinates3D": { "x": 0, "y": 0.2, "z": 4 },
+      "dimensions": { "width": 50, "height": 0.4, "depth": 24 },
+      "architecturalStyle": "Terracotta & buff interlocking pavers bordered with royal palm trees having yellow and green trunk bases",
+      "droneRefFrames": [7, 8, 14, 15, 16, 17, 18, 19],
+      "facilities": [
+        "Pedestrian Shaded Walkway",
+        "Convocation Procession Pathway",
+        "EV Campus Shuttle Charging Port",
+        "Student Green Benches"
+      ],
+      "defaultStatus": "normal",
+      "approximate": false
+    },
+    {
+      "id": "MGR-KALAM-06",
+      "name": "Dr. A.P.J. Abdul Kalam Computing & AI Centre",
+      "category": "laboratory",
+      "department": "Department of Computer Science & Engineering / AI & Data Science",
+      "floorCount": 5,
+      "coordinates3D": { "x": 30, "y": 9, "z": -12 },
+      "dimensions": { "width": 28, "height": 18, "depth": 18 },
+      "architecturalStyle": "Multi-tier glass and concrete structure housing advanced computation laboratories",
+      "droneRefFrames": [2, 3, 14],
+      "facilities": [
+        "GPU Accelerated Deep Learning Cluster",
+        "Cyber Security & Forensics Lab",
+        "Software Development Incubation Hub",
+        "Smart Classroom Amphitheater"
+      ],
+      "defaultStatus": "normal",
+      "approximate": true
+    },
+    {
+      "id": "MGR-AUD-07",
+      "name": "A.C.S. University Convention Centre & Auditorium",
+      "category": "auditorium",
+      "department": "University Events & Cultural Affairs",
+      "floorCount": 3,
+      "coordinates3D": { "x": -32, "y": 7, "z": -16 },
+      "dimensions": { "width": 34, "height": 14, "depth": 24 },
+      "architecturalStyle": "Acoustically insulated tiered hall with sweeping cantilevered entrance canopy",
+      "droneRefFrames": [0, 4, 8],
+      "facilities": [
+        "1,500-Seat Main Air-Conditioned Auditorium",
+        "Green Rooms & Stage Production Control",
+        "VVIP Lounge & Conference Suite",
+        "Press Conference Gallery"
+      ],
+      "defaultStatus": "normal",
+      "approximate": true
+    }
+  ]
+}
